@@ -1,0 +1,29 @@
+node_id: "edge-001"
+
+metrics:
+  listen: "0.0.0.0"
+  port: 9108
+
+
+control_api:
+  listen: 127.0.0.1
+  port: 9180
+
+workloads:
+  - name: "dummy"
+    command: ["python3", "scripts/dummy_workload.py"]
+    restart: true
+    restart_backoff_s: 2
+    restart_backoff_max_s: 20
+  - name: healthdemo
+    command: ["python3", "scripts/health_demo.py"]
+    restart: true
+    env:
+      HEALTH_HOST: "127.0.0.1"
+      HEALTH_PORT: "8081"
+      HEALTH_FAIL: "0"
+    health:
+      http:
+        url: "http://127.0.0.1:8081/health"
+        interval_s: 2
+        timeout_s: 1

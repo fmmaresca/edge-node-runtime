@@ -1,0 +1,31 @@
+[Unit]
+Description=Edge Node Runtime (workload supervisor)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=edge
+Group=edge
+WorkingDirectory=/opt/edge-node-runtime
+
+Environment=EDGE_LOG_LEVEL=INFO
+ExecStart=/opt/edge-node-runtime/.venv/bin/edge-runtime --config /etc/edge-runtime/config.yaml
+
+Restart=always
+RestartSec=2
+
+# Basic hardening (safe defaults)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/edge-runtime
+ReadOnlyPaths=/opt/edge-node-runtime /etc/edge-runtime
+
+# Allow binding to ports >1024; no special caps needed.
+# Logs go to journald by default.
+
+[Install]
+WantedBy=multi-user.target
+UNIT
