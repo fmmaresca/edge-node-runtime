@@ -1,0 +1,2 @@
+[console_scripts]
+edge-runtime = edge_runtime.main:main
